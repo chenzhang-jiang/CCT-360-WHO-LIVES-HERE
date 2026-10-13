@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#15120e" />
+  <title>Who Lives Here? — CCT360 Assignment 1</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="app" aria-live="polite">
+    <!-- HOME -->
+    <section id="homeScreen" class="screen home-screen is-active" aria-label="Game home">
+      <div class="home-bg" aria-hidden="true"></div>
+      <div class="home-overlay"></div>
+      <div class="home-content">
+        <p class="eyebrow">AN INTERACTIVE INVESTIGATION</p>
+        <h1>WHO LIVES HERE?</h1>
+        <p class="home-subtitle">Reconstruct a life from what was left behind.</p>
+        <div class="home-actions">
+          <button id="startBtn" class="primary-btn">NEW INVESTIGATION</button>
+          <button id="continueBtn" class="ghost-btn" disabled>CONTINUE</button>
+          <button id="howBtn" class="text-btn">HOW TO PLAY</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profileScreen" class="screen paper-screen" aria-label="Create investigation file">
+      <div class="paper-card small-card">
+        <p class="eyebrow dark">CASE FILE</p>
+        <h2>Create an investigation file</h2>
+        <p>Enter your name before you begin.</p>
+        <label class="field-label" for="playerName">Investigator name</label>
+        <input id="playerName" class="text-input" type="text" maxlength="24" autocomplete="off" placeholder="Your name" />
+        <p id="profileError" class="form-error" role="alert"></p>
+        <div class="modal-actions">
+          <button id="createFileBtn" class="primary-btn dark-btn">CREATE FILE</button>
+          <button id="profileBackBtn" class="text-btn dark-text">BACK</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRO -->
+    <section id="introScreen" class="screen intro-screen" aria-label="Investigation introduction">
+      <div class="intro-bg" aria-hidden="true"></div>
+      <div class="intro-overlay"></div>
+      <div class="intro-copy">
+        <p class="intro-line line-1">The apartment is quiet.</p>
+        <p class="intro-line line-2">Someone clearly lives here.</p>
+        <h2 class="intro-line line-3">But who?</h2>
+        <button id="beginInvestigationBtn" class="primary-btn intro-button">BEGIN INVESTIGATION</button>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <section id="gameScreen" class="screen game-screen" aria-label="Apartment investigation">
+      <header class="game-header">
+        <button id="homeLogoBtn" class="wordmark" aria-label="Return to main menu">WHO LIVES HERE?</button>
+        <nav class="room-nav" aria-label="Room navigation">
+          <button data-room="overview">APARTMENT</button>
+          <button data-room="bedroom">BEDROOM</button>
+          <button data-room="kitchen">KITCHEN</button>
+          <button data-room="living">LIVING ROOM</button>
+        </nav>
+        <div class="header-progress" aria-label="Evidence progress">
+          <span class="header-progress-label">EVIDENCE</span>
+          <strong id="headerCount">0 / 10</strong>
+          <div class="header-progress-track"><div id="headerProgressBar" class="header-progress-bar"></div></div>
+        </div>
+      </header>
+
+      <div id="scene" class="scene" data-scene="overview">
+        <div id="sceneBackdrop" class="scene-backdrop scene-enter"></div>
+        <div id="sceneShade" class="scene-shade"></div>
+
+        <div id="overviewLayer" class="scene-layer room-select-layer">
+          <button class="room-label bedroom-label" data-enter="bedroom"><span>BEDROOM</span></button>
+          <button class="room-label kitchen-label" data-enter="kitchen"><span>KITCHEN</span></button>
+          <button class="room-label living-label" data-enter="living"><span>LIVING ROOM</span></button>
+        </div>
+
+        <div id="bedroomLayer" class="scene-layer hotspot-layer hidden">
+          <button class="hotspot hotspot-desk" data-action="open-desk"><span>DESK</span></button>
+          <button class="hotspot hotspot-bed" data-action="bed-observation"><span>BED</span></button>
+        </div>
+
+        <div id="deskLayer" class="scene-layer hotspot-layer hidden">
+          <button class="hotspot hotspot-mug" data-action="inspect-mug"><span>MUG</span></button>
+          <button class="hotspot hotspot-laptop" data-action="open-laptop"><span>LAPTOP</span></button>
+          <button class="hotspot hotspot-sketchbook" data-action="inspect-sketchbook"><span>SKETCHBOOK</span></button>
+          <button class="hotspot hotspot-brochure" data-action="inspect-brochure"><span>MAGAZINE</span></button>
+          <button class="hotspot hotspot-drawer" data-action="inspect-drawer"><span>DRAWER</span></button>
+          <button class="back-chip" data-action="back-bedroom">← BEDROOM</button>
+        </div>
+
+        <div id="kitchenLayer" class="scene-layer hotspot-layer hidden">
+          <button class="hotspot hotspot-fridge" data-action="inspect-fridge"><span>FRIDGE</span></button>
+          <button class="hotspot hotspot-food-cabinet" data-action="inspect-food-cabinet"><span>FOOD CABINET</span></button>
+          <button class="hotspot hotspot-vitamin-cabinet" data-action="inspect-vitamin-cabinet"><span>CABINET</span></button>
+          <button class="hotspot hotspot-kitchen-drawer" data-action="inspect-kitchen-drawer"><span>DRAWER</span></button>
+        </div>
+
+        <div id="livingLayer" class="scene-layer hotspot-layer hidden">
+          <button class="hotspot hotspot-receipt" data-action="inspect-receipt"><span>PAPER</span></button>
+          <button class="hotspot hotspot-backpack" data-action="inspect-backpack"><span>BACKPACK</span></button>
+        </div>
+
+        <div class="scene-footer">
+          <button id="sceneBackBtn" class="footer-nav-btn footer-back">← BACK</button>
+          <button id="notebookBtn" class="footer-nav-btn footer-notebook" aria-label="Open notebook"><img src="images/notebook.png" alt="" /> <span>NOTEBOOK</span></button>
+          <button id="guessBtn" class="footer-nav-btn footer-guess" disabled>FIND 6 ITEMS TO MAKE A DEDUCTION</button>
+          <span id="sceneTitle" class="visually-hidden">APARTMENT</span>
+          <span id="progressText" class="visually-hidden">0 / 9 items found</span>
+          <div class="visually-hidden"><div id="progressBar"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GENERAL MODAL -->
+    <div id="modal" class="modal" aria-hidden="true">
+      <div class="modal-scrim" data-close-modal></div>
+      <article id="modalCard" class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="close-btn" data-close-modal aria-label="Close">×</button>
+        <div id="modalVisual" class="modal-visual hidden"></div>
+        <div class="modal-copy">
+          <p id="modalKicker" class="modal-kicker"></p>
+          <h2 id="modalTitle"></h2>
+          <div id="modalBody" class="modal-body"></div>
+          <div id="modalActions" class="modal-actions"></div>
+        </div>
+      </article>
+    </div>
+
+    <!-- NOTEBOOK -->
+    <div id="caseFile" class="notebook-modal" aria-hidden="true">
+      <div class="modal-scrim" data-close-notebook></div>
+      <article class="notebook-panel" role="dialog" aria-modal="true" aria-label="Case file">
+        <img src="images/open-notebook.png" class="notebook-open-bg" alt="Open notebook" />
+        <button class="close-btn notebook-close" data-close-notebook aria-label="Close case file">×</button>
+        <div class="notebook-content">
+          <section class="notebook-page left-page">
+            <p class="notebook-label">CASE FILE</p>
+            <h2 id="notebookPlayer">Investigator</h2>
+            <p id="notebookCount" class="notebook-count">0 / 9 items found</p>
+            <div class="notebook-rule"></div>
+            <h3>EVIDENCE</h3>
+            <div id="evidenceList" class="clue-list"></div>
+          </section>
+          <section class="notebook-page right-page">
+            <p class="notebook-label">OTHER ITEMS</p>
+            <div id="otherList" class="clue-list"></div>
+            <div id="notebookGuessStatus" class="notebook-status"></div>
+          </section>
+        </div>
+      </article>
+    </div>
+
+    <!-- LAPTOP -->
+    <div id="laptopModal" class="computer-modal" aria-hidden="true">
+      <div class="modal-scrim" data-close-laptop></div>
+      <article class="computer-shell" role="dialog" aria-modal="true" aria-label="Laptop">
+        <div class="computer-topbar">
+          <span>OWNER'S LAPTOP</span>
+          <button class="computer-close" data-close-laptop>×</button>
+        </div>
+        <div id="computerLogin" class="computer-login">
+          <div class="login-avatar">●</div>
+          <h2>Locked</h2>
+          <p>Enter password</p>
+          <input id="passwordInput" class="password-input" type="password" inputmode="numeric" maxlength="8" autocomplete="off" aria-label="Laptop password" />
+          <button id="unlockBtn" class="computer-btn">UNLOCK</button>
+          <p id="passwordError" class="computer-error"></p>
+        </div>
+        <div id="computerDesktop" class="computer-desktop hidden">
+          <div class="desktop-icons">
+            <button class="folder-icon" data-folder="CCT360H5"><span class="folder-shape"></span><span>CCT360H5</span></button>
+            <button class="folder-icon" data-folder="CCT356H5"><span class="folder-shape"></span><span>CCT356H5</span></button>
+            <button class="folder-icon" data-folder="CCT353H5"><span class="folder-shape"></span><span>CCT353H5</span></button>
+            <button id="fah262Folder" class="folder-icon hidden usb-course-folder" data-folder="FAH262H5"><span class="folder-shape"></span><span>FAH262H5</span></button>
+            <button id="fasFolder" class="folder-icon hidden usb-course-folder" data-folder="FAS"><span class="folder-shape"></span><span>FAS</span></button>
+          </div>
+          <div id="folderWindow" class="folder-window hidden">
+            <div class="folder-window-top"><strong id="folderTitle">Folder</strong><button id="closeFolder">×</button></div>
+            <div id="folderContents" class="folder-contents"></div>
+            <button id="addLaptopFilesBtn" class="computer-add-btn hidden">ADD COURSE FOLDERS TO NOTEBOOK</button>
+          </div>
+          <div class="desktop-taskbar">
+            <span>FILES</span>
+            <span id="usbStatus">No external drive</span>
+            <button id="insertUsbBtn" class="insert-usb-btn hidden">INSERT USB</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- QUIZ -->
+    <section id="quizScreen" class="screen quiz-screen" aria-label="Final theory">
+      <div class="quiz-bg"></div>
+      <div class="quiz-overlay"></div>
+      <div class="quiz-topbar">
+        <div class="quiz-brand">WHO LIVES HERE?<small>the curious case</small></div>
+        <span id="quizStepLabel" class="quiz-step-indicator">1 / 3</span>
+      </div>
+      <div class="quiz-card">
+        <div id="quizContent"></div>
+      </div>
+      <button id="exitQuizBtn" class="quiz-exit">← BACK TO APARTMENT</button>
+    </section>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      <span id="toastLabel">NEW ITEM FOUND</span>
+      <strong id="toastTitle"></strong>
+      <button id="toastViewBtn">VIEW NOTEBOOK</button>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
